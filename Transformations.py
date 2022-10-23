@@ -5,89 +5,68 @@ from torch import Tensor
 # Elementary Transformations Sequence
 
 
-def TTx(x: Tensor | float):
-    if type(x) == Tensor:
-        assert x.numel() == 1
-    else:
-        x = Tensor([x])
-    return Tensor([
-        [1, 0, 0, x],
-        [0, 1, 0, 0],
-        [0, 0, 1, 0],
-        [0, 0, 0, 1]
+def TTx(x: Tensor):
+    assert x.numel() == 1
+    return th.vstack([
+        th.hstack([Tensor([1]), Tensor([0]), Tensor([0]), x]),
+        Tensor([0, 1, 0, 0]),
+        Tensor([0, 0, 1, 0]),
+        Tensor([0, 0, 0, 1])
     ])
 
 
-def TTy(y: Tensor | float):
-    if type(y) == Tensor:
-        assert y.numel() == 1
-    else:
-        y = Tensor([y])
-    return Tensor([
-        [1, 0, 0, 0],
-        [0, 1, 0, y],
-        [0, 0, 1, 0],
-        [0, 0, 0, 1]
+def TTy(y: Tensor):
+    assert y.numel() == 1
+    return th.vstack([
+        Tensor([1, 0, 0, 0]),
+        th.hstack([Tensor([0]), Tensor([1]), Tensor([0]), y]),
+        Tensor([0, 0, 1, 0]),
+        Tensor([0, 0, 0, 1])
     ])
 
 
-def TTz(z: Tensor | float):
-    if type(z) == Tensor:
-        assert z.numel() == 1
-    else:
-        z = Tensor([z])
-    return Tensor([
-        [1, 0, 0, 0],
-        [0, 1, 0, 0],
-        [0, 0, 1, z],
-        [0, 0, 0, 1]
+def TTz(z: Tensor):
+    assert z.numel() == 1
+    return th.vstack([
+        Tensor([1, 0, 0, 0]),
+        Tensor([0, 1, 0, 0]),
+        th.hstack([Tensor([0]), Tensor([0]), Tensor([1]), z]),
+        Tensor([0, 0, 0, 1])
     ])
 
 
-def TRx(x: Tensor | float):
-    if type(x) == Tensor:
-        assert x.numel() == 1
-    else:
-        x = Tensor([x])
-    return Tensor([
-        [1, 0, 0, 0],
-        [0, th.cos(x), -th.sin(x), 0],
-        [0, th.sin(x), th.cos(x), 0],
-        [0, 0, 0, 1]
+def TRx(x: Tensor):
+    assert x.numel() == 1
+    return th.vstack([
+        Tensor([1, 0, 0, 0]),
+        th.hstack([Tensor([0]), th.cos(x), -th.sin(x), Tensor([0])]),
+        th.hstack([Tensor([0]), th.sin(x), th.cos(x), Tensor([0])]),
+        Tensor([0, 0, 0, 1])
     ])
 
 
-def TRy(y: Tensor | float):
-    if type(y) == Tensor:
-        assert y.numel() == 1
-    else:
-        y = Tensor([y])
-    return Tensor([
-        [th.cos(y), 0, th.sin(y), 0],
-        [0, 1, 0, 0],
-        [-th.sin(y), 0, th.cos(y), 0],
-        [0, 0, 0, 1]
+def TRy(y: Tensor):
+    assert y.numel() == 1
+    return th.vstack([
+        th.hstack([th.cos(y), Tensor([0]), th.sin(y), Tensor([0])]),
+        Tensor([0, 1, 0, 0]),
+        th.hstack([-th.sin(y), Tensor([0]), th.cos(y), Tensor([0])]),
+        Tensor([0, 0, 0, 1])
     ])
 
 
-def TRz(z: Tensor | float):
-    if type(z) == Tensor:
-        assert z.numel() == 1
-    else:
-        z = Tensor([z])
-    return Tensor([
-        [th.cos(z), -th.sin(z), 0, 0],
-        [th.sin(z), th.cos(z), 0, 0],
-        [0, 0, 1, 0],
-        [0, 0, 0, 1]
+def TRz(z: Tensor):
+    assert z.numel() == 1
+    return th.vstack([
+        th.hstack([th.cos(z), -th.sin(z), Tensor([0]), Tensor([0])]),
+        th.hstack([th.sin(z), th.cos(z), Tensor([0]), Tensor([0])]),
+        Tensor([0, 0, 1, 0]),
+        Tensor([0, 0, 0, 1])
     ])
 
 
-def dTRx(x: Tensor | float):
-    if type(x) == Tensor:
-        assert x.numel() == 1
-    else:
-        x = Tensor([x])
+def dTRx(x: Tensor):
+    assert x.numel() == 1
     return Tensor([
         [0, 0, 0, 0],
         [0, 0, -1, 0],
@@ -96,11 +75,8 @@ def dTRx(x: Tensor | float):
     ]) @ TRx(x)
 
 
-def dTRy(y: Tensor | float):
-    if type(y) == Tensor:
-        assert y.numel() == 1
-    else:
-        y = Tensor([y])
+def dTRy(y: Tensor):
+    assert y.numel() == 1
     return Tensor([
         [0, 0, 1, 0],
         [0, 0, 0, 0],
@@ -109,11 +85,8 @@ def dTRy(y: Tensor | float):
     ]) @ TRy(y)
 
 
-def dTRz(z: Tensor | float):
-    if type(z) == Tensor:
-        assert z.numel() == 1
-    else:
-        z = Tensor([z])
+def dTRz(z: Tensor):
+    assert z.numel() == 1
     return Tensor([
         [0, -1, 0, 0],
         [1, 0, 0, 0],
@@ -122,11 +95,8 @@ def dTRz(z: Tensor | float):
     ]) @ TRz(z)
 
 
-def dTTx(x: Tensor | float):
-    if type(x) == Tensor:
-        assert x.numel() == 1
-    else:
-        x = Tensor([x])
+def dTTx(x: Tensor):
+    assert x.numel() == 1
     return Tensor([
         [0, 0, 0, 1],
         [0, 0, 0, 0],
@@ -135,11 +105,8 @@ def dTTx(x: Tensor | float):
     ])
 
 
-def dTTy(y: Tensor | float):
-    if type(y) == Tensor:
-        assert y.numel() == 1
-    else:
-        y = Tensor([y])
+def dTTy(y: Tensor):
+    assert y.numel() == 1
     return Tensor([
         [0, 0, 0, 0],
         [0, 0, 0, 1],
@@ -148,11 +115,8 @@ def dTTy(y: Tensor | float):
     ])
 
 
-def dTTz(z: Tensor | float):
-    if type(z) == Tensor:
-        assert z.numel() == 1
-    else:
-        z = Tensor([z])
+def dTTz(z: Tensor):
+    assert z.numel() == 1
     return Tensor([
         [0, 0, 0, 0],
         [0, 0, 0, 0],
@@ -169,7 +133,7 @@ def T2RP(T: Tensor):
     """
     assert T.shape == th.Size([4, 4]), f"Matrix of shape {T.shape} is not a transformation matrix"
     T = T[:3, :]
-    return T[:, :3], T[:, -1].reshape(3,-1)
+    return T[:, :3], T[:, -1].reshape(3, -1)
 
 
 def R2Euler(R: Tensor):
@@ -190,3 +154,11 @@ def R2Euler(R: Tensor):
     l = th.transpose(Tensor([[R[2, 1] - R[1, 2], R[0, 2] - R[2, 0], R[1, 0] - R[0, 1]]]), 0, 1)
     l_norm = th.norm(l)
     return (th.atan2(l_norm, R[0, 0] + R[1, 1] + R[2, 2]) / l_norm) * l
+
+
+def inverse_skew(R: Tensor):
+    assert R.shape == th.Size([3, 3]), f"Matrix of shape {R.shape} is not a rotation matrix"
+    is_skew_symmetric = th.allclose(R.transpose(dim0=0, dim1=1), -R, atol=1e-04)
+    # assert is_skew_symmetric, f"Matrix \n{R.round(decimals=4)}\n is not skew symmetric"
+
+    return th.vstack([R[2, 1], R[0, 2], R[1, 0]])
